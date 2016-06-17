@@ -1,17 +1,14 @@
-from pylab import *
-from scipy.cluster.vq import *
+from pil import Image
 
-list1 = [88.0, 74.0, 96.0, 85.0]
-list2 = [92.0, 99.0, 95.0, 94.0]
-list3 = [91.0, 87.0, 99.0, 95.0]
-list4 = [78.0, 99.0, 97.0, 81.0]
-list5 = [88.0, 78.0, 98.0, 84.0]
-list6 = [100.0, 95.0, 100.0, 92.0]
+import argparse
 
-data = vstack((list1, list2, list3, list4, list5, list6))
+ascii_char = list("!@#$%^&*()12345670QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm")
 
-# print(data)
-centroids, _ = kmeans(data, 2)
-result, _ = vq(data, centroids)
-print("testing, hahaha")
-print(result)
+def get_char(r,g,b,alpha = 256):
+    if alpha == 0:
+        return ' '
+    length = len(ascii_char)
+    gray = int(0.2126*r+0.7152*g+0.0722*b)
+    unit = (256.0+1)/length
+    return ascii_char[int(gray/unit)]
+
