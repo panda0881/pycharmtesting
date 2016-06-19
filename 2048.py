@@ -126,17 +126,17 @@ class GameField(object):
 
         def draw_hor_separator():
             line = '+' ('+------' * self.width + '+')[1:]
-            sperator = defaultdict(lambda: line)
+            separator = defaultdict(lambda: line)
             if not hasattr(draw_hor_separator, "counter"):
                 draw_hor_separator.counter = 0
             cast(separator[draw_hor_separator.counter])
             draw_hor_separator.counter +=1
 
         def draw_row(row):
-            cast(''.join('|{:^5} '.format(num) if num>0 else '|' for num in row)+ '|')
+            cast(''.join('|{:^5} '.format(num) if num > 0 else '|' for num in row) + '|')
             screen.clear()
             cast('SCORE: ' + str(self.score))
-            if 0!= self.highscore:
+            if 0 != self.highscore:
                 cast('HIGHSCORE: ' + str(self.highscore))
 
             for row in self.field:
@@ -155,6 +155,46 @@ class GameField(object):
             cast(help_string2)
 
 
+def main(stdscr):
+    def init():
+        game_field.resrt()
+        return 'Game'
+
+    def not_game(state):
+        game_field.draw(stdscr)
+        action = get_user_action(stdscr)
+        responses = defaultdict(lambda: state)
+        responses['Restart'], responses['Exit'] = 'Init', 'Exit'
+        return responses[action]
+
+    def game():
+        game_field.draw(stdscr)
+        action = get_user_action(stdscr)
+        if action == 'Restart':
+            return 'Init'
+        if action == 'Exit':
+            return 'Exit'
+        if game_field.move(action):
+            if game_field.is_win():
+                return 'Win'
+            if game_field.is_gameover():
+                return 'Gameover'
+        return 'Game'
+
+    state_actions = {
+        'Init': init,
+        'Win': lambda: not_game('Win'),
+        'Gameover': lambda: not_game('Gameover'),
+        'Game': game
+    }
+    curses.use_default_color()
+    game_field = GameField(win=32)
+
+    state = 'Init'
+
+    while state != 'Exit':
+        state = state_actions[state]()
+curses.wrapper(main)
 
 
 
