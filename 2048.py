@@ -1,4 +1,4 @@
-import curses
+import console
 
 from random import randrange, choice
 
@@ -187,14 +187,17 @@ def main(stdscr):
         'Gameover': lambda: not_game('Gameover'),
         'Game': game
     }
-    curses.use_default_color()
+    print("haha")
+    # console.use_default_color()
     game_field = GameField(win=32)
 
     state = 'Init'
 
     while state != 'Exit':
         state = state_actions[state]()
-curses.wrapper(main)
+
+
+main()
 
 
 
