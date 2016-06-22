@@ -135,7 +135,135 @@ class App(object):
     def is_gameover(self):
         return not any(self.move_is_possible(move) for move in actions)
 
+    def move(self, direction):
+        def move_row_left(row):
+            def tighten(row):
+                new_row = [i for i in row if i != 0]
+                new_row += [0 for i in range(len(row) - len(new_row))]
+                return new_row
 
+            def merge(row):
+                pair = False
+                new_row = []
+                for i in range(len(row)):
+                    if pair:
+                        new_row.append(2 * row[i])
+                        self.score += 2 * row[i]
+                        pair = False
+                    else:
+                        if i + 1 < len(row) and row[i] == row[i + 1]:
+                            pair = True
+                            new_row.append(0)
+                        else:
+                            new_row.append(row[i])
+                assert len(new_row) == len(row)
+                return new_row
+
+            return tighten(merge(tighten(row)))
+
+        moves = {}
+        moves['Left'] = lambda field: [move_row_left(row) for row in field]
+        moves['Right'] = lambda field: invert(moves['Left'](invert(field)))
+        moves['Up'] = lambda field: transpose(moves['Left'](transpose(field)))
+        moves['Down'] = lambda field: transpose(moves['Right'](transpose(field)))
+
+        if direction in moves:
+            if self.move_is_possible(direction):
+                self.field = moves[direction](self.field)
+                self.spawn()
+                return True
+            else:
+                return False
+
+    def draw(self):
+        help_string1 = '(W)Up (S)Down (A)Left (D)Right'
+        help_string2 = '    (R)Restart (Q)Exit'
+        gameover_string = '         GAME OVER'
+        win_string = '          YOU WIN!'
+
+        self.value11.delete(0)
+        self.value11.insert(END, self.field[0][0])
+        self.value12.delete(0)
+        self.value12.insert(END, self.field[0][1])
+        self.value13.delete(0)
+        self.value13.insert(END, self.field[0][2])
+        self.value14.delete(0)
+        self.value14.insert(END, self.field[0][3])
+        self.value21.delete(0)
+        self.value21.insert(END, self.field[1][0])
+        self.value22.delete(0)
+        self.value22.insert(END, self.field[1][1])
+        self.value23.delete(0)
+        self.value23.insert(END, self.field[1][2])
+        self.value24.delete(0)
+        self.value24.insert(END, self.field[1][3])
+        self.value31.delete(0)
+        self.value31.insert(END, self.field[2][0])
+        self.value32.delete(0)
+        self.value32.insert(END, self.field[2][1])
+        self.value33.delete(0)
+        self.value33.insert(END, self.field[2][2])
+        self.value34.delete(0)
+        self.value34.insert(END, self.field[2][3])
+        self.value41.delete(0)
+        self.value41.insert(END, self.field[3][0])
+        self.value42.delete(0)
+        self.value42.insert(END, self.field[3][1])
+        self.value43.delete(0)
+        self.value43.insert(END, self.field[3][2])
+        self.value44.delete(0)
+        self.value44.insert(END, self.field[3][3])
+
+        if self.is_win():
+            print(win_string)
+        else:
+            if self.is_gameover():
+                print(gameover_string)
+            else:
+                print(help_string1)
+        print(help_string2)
+
+
+def main():
+    def init():
+        game_field.reset()
+        return 'Game'
+
+    def not_game(state):
+        game_field.draw()
+        action = get_user_action()
+        responses = defaultdict(lambda: state)
+        responses['Restart'], responses['Exit'] = 'Init', 'Exit'
+        return responses[action]
+
+    def game():
+        game_field.draw(stdscr)
+        action = get_user_action(stdscr)
+        if action == 'Restart':
+            return 'Init'
+        if action == 'Exit':
+            return 'Exit'
+        if game_field.move(action):
+            if game_field.is_win():
+                return 'Win'
+            if game_field.is_gameover():
+                return 'Gameover'
+        return 'Game'
+
+    state_actions = {
+        'Init': init,
+        'Win': lambda: not_game('Win'),
+        'Gameover': lambda: not_game('Gameover'),
+        'Game': game
+    }
+    print("haha")
+    # console.use_default_color()
+    game_field = GameField(win=32)
+
+    state = 'Init'
+
+    while state != 'Exit':
+        state = state_actions[state]()
 
 
 if __name__ == '__main__':
