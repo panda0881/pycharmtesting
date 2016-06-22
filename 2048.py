@@ -1,4 +1,4 @@
-import console
+from tkinter import *
 
 from random import randrange, choice
 
@@ -32,20 +32,20 @@ class GameField(object):
         self.width = width
         self.win_value = 2048
         self.score = 0
-        self.highscore = 0
+        self.high_score = 0
         self.reset()
 
     def spawn(self):
-        if randrange(100)>89:
+        if randrange(100) > 89:
             new_element = 4
         else:
             new_element = 2
-        (i,j) = choice([(i,j) for i in range(self.width) for j in range(self.height) if self.field[i][j] == 0])
+        (i, j) = choice([(i, j) for i in range(self.width) for j in range(self.height) if self.field[i][j] == 0])
         self.field[i][j] = new_element
 
     def reset(self):
-        if self.score > self.highscore:
-            self.highscore = self.score
+        if self.score > self.high_score:
+            self.high_score = self.score
         self.score = 0
         self.field = [[0 for i in range(self.width)] for j in range(self.height)]
         self.spawn()
@@ -105,7 +105,7 @@ class GameField(object):
                 return False
             return any(change(i) for i in range(len(row) - 1))
 
-        check={}
+        check = {}
         check['Left'] = lambda field: any(row_is_left_movable(row) for row in field)
         check['Right'] = lambda field: any(row_is_left_movable(row) for row in field)
         check['Up'] = lambda field: check['Left'](transpose(field))
@@ -130,14 +130,14 @@ class GameField(object):
             if not hasattr(draw_hor_separator, "counter"):
                 draw_hor_separator.counter = 0
             cast(separator[draw_hor_separator.counter])
-            draw_hor_separator.counter +=1
+            draw_hor_separator.counter += 1
 
         def draw_row(row):
             cast(''.join('|{:^5} '.format(num) if num > 0 else '|' for num in row) + '|')
             screen.clear()
             cast('SCORE: ' + str(self.score))
-            if 0 != self.highscore:
-                cast('HIGHSCORE: ' + str(self.highscore))
+            if 0 != self.high_score:
+                cast('HIGHSCORE: ' + str(self.high_score))
 
             for row in self.field:
                 draw_hor_separator()
@@ -155,7 +155,7 @@ class GameField(object):
             cast(help_string2)
 
 
-def main(stdscr):
+def main():
     def init():
         game_field.resrt()
         return 'Game'
@@ -196,8 +196,6 @@ def main(stdscr):
     while state != 'Exit':
         state = state_actions[state]()
 
-
-main()
 
 
 
