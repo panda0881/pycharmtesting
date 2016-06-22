@@ -82,8 +82,7 @@ class App(object):
         self.button2 = Button(self.button_row2, text='Left', width=9, height=2).pack(side=LEFT)
         self.button3 = Button(self.button_row2, text='Right', width=9, height=2).pack(side=LEFT)
         self.button4 = Button(self.button_row3, text='Down', width=9, height=2).pack()
-        self.button5 = Button(self.button_row4, text='Reset', width=9, height=2, bg='yellow').pack(side=LEFT)
-        self.button6 = Button(self.button_row4, text='Exit', width=9, height=2, bg='red').pack(side=LEFT)
+        self.button5 = Button(self.button_row4, text='Reset', width=9, height=2, bg='yellow').pack()
 
         self.height = 4
         self.width = 4
@@ -128,6 +127,13 @@ class App(object):
             return check[direction](self.field)
         else:
             return False
+
+    def respond(self, action):
+        if action == 'Restart':
+            self.reset()
+        else:
+            if self.move(action):
+                self.draw()
 
     def is_win(self):
         return any(any(i >= self.win_value for i in row) for row in self.field)
@@ -176,9 +182,7 @@ class App(object):
                 return False
 
     def draw(self):
-        help_string1 = '(W)Up (S)Down (A)Left (D)Right'
-        help_string2 = '    (R)Restart (Q)Exit'
-        gameover_string = '         GAME OVER'
+        game_over_string = '         GAME OVER'
         win_string = '          YOU WIN!'
 
         self.value11.delete(0)
@@ -216,54 +220,8 @@ class App(object):
 
         if self.is_win():
             print(win_string)
-        else:
-            if self.is_gameover():
-                print(gameover_string)
-            else:
-                print(help_string1)
-        print(help_string2)
-
-
-def main():
-    def init():
-        game_field.reset()
-        return 'Game'
-
-    def not_game(state):
-        game_field.draw()
-        action = get_user_action()
-        responses = defaultdict(lambda: state)
-        responses['Restart'], responses['Exit'] = 'Init', 'Exit'
-        return responses[action]
-
-    def game():
-        game_field.draw(stdscr)
-        action = get_user_action(stdscr)
-        if action == 'Restart':
-            return 'Init'
-        if action == 'Exit':
-            return 'Exit'
-        if game_field.move(action):
-            if game_field.is_win():
-                return 'Win'
-            if game_field.is_gameover():
-                return 'Gameover'
-        return 'Game'
-
-    state_actions = {
-        'Init': init,
-        'Win': lambda: not_game('Win'),
-        'Gameover': lambda: not_game('Gameover'),
-        'Game': game
-    }
-    print("haha")
-    # console.use_default_color()
-    game_field = GameField(win=32)
-
-    state = 'Init'
-
-    while state != 'Exit':
-        state = state_actions[state]()
+        elif self.is_gameover():
+            print(game_over_string)
 
 
 if __name__ == '__main__':
