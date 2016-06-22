@@ -4,6 +4,16 @@ from random import randrange, choice
 
 from collections import defaultdict
 
+actions = ['Up', 'Left', 'Down', 'Right', 'Restart', 'Exit']
+
+
+def transpose(field):
+    return [list(row) for row in zip(*field)]
+
+
+def invert(field):
+    return [row[::-1] for row in field]
+
 
 class App(object):
 
@@ -84,21 +94,48 @@ class App(object):
         self.reset()
 
     def spawn(self):
+        new_element = 2
         if randrange(100) > 89:
             new_element = 4
-        else:
-            new_element = 2
         (i, j) = choice([(i, j) for i in range(self.width) for j in range(self.height) if self.field[i][j] == 0])
         self.field[i][j] = new_element
 
     def reset(self):
         if self.score > self.high_score:
-               self.high_score = self.score
+            self.high_score = self.score
         self.score = 0
         self.field = [[0 for i in range(self.width)] for j in range(self.height)]
         self.spawn()
 
-        # command = self.move('Up')
+    def move_is_possible(self, direction):
+        def row_is_left_movable(row):
+            def change(i):
+                if row[i] == 0 and row[i + 1] != 0:
+                    return True
+                if row[i] != 0 and row[i + 1] == row[i]:
+                    return True
+                return False
+
+            return any(change(i) for i in range(len(row) - 1))
+
+        check = {}
+        check['Left'] = lambda field: any(row_is_left_movable(row) for row in field)
+        check['Right'] = lambda field: any(row_is_left_movable(row) for row in field)
+        check['Up'] = lambda field: check['Left'](transpose(field))
+        check['Down'] = lambda field: check['Right'](transpose(field))
+
+        if direction in check:
+            return check[direction](self.field)
+        else:
+            return False
+
+    def is_win(self):
+        return any(any(i >= self.win_value for i in row) for row in self.field)
+
+    def is_gameover(self):
+        return not any(self.move_is_possible(move) for move in actions)
+
+
 
 
 if __name__ == '__main__':
