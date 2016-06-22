@@ -1,5 +1,9 @@
 from tkinter import *
 
+from random import randrange, choice
+
+from collections import defaultdict
+
 
 class App(object):
 
@@ -70,6 +74,29 @@ class App(object):
         self.button4 = Button(self.button_row3, text='Down', width=9, height=2).pack()
         self.button5 = Button(self.button_row4, text='Reset', width=9, height=2, bg='yellow').pack(side=LEFT)
         self.button6 = Button(self.button_row4, text='Exit', width=9, height=2, bg='red').pack(side=LEFT)
+
+        self.height = 4
+        self.width = 4
+        self.win_value = 2048
+        self.score = 0
+        self.high_score = 0
+        self.field = [[0 for i in range(self.width)] for j in range(self.height)]
+        self.reset()
+
+    def spawn(self):
+        if randrange(100) > 89:
+            new_element = 4
+        else:
+            new_element = 2
+        (i, j) = choice([(i, j) for i in range(self.width) for j in range(self.height) if self.field[i][j] == 0])
+        self.field[i][j] = new_element
+
+    def reset(self):
+        if self.score > self.high_score:
+               self.high_score = self.score
+        self.score = 0
+        self.field = [[0 for i in range(self.width)] for j in range(self.height)]
+        self.spawn()
 
         # command = self.move('Up')
 

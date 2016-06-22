@@ -157,7 +157,7 @@ class GameField(object):
 
 def main():
     def init():
-        game_field.resrt()
+        game_field.reset()
         return 'Game'
 
     def not_game(state):
