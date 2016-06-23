@@ -18,6 +18,13 @@ def invert(field):
 class App(object):
     def __init__(self, root):
 
+        self.height = 4
+        self.width = 4
+        self.win_value = 2048
+        self.score = 0
+        self.high_score = 0
+        self.field = [[0 for i in range(self.width)] for j in range(self.height)]
+
         self.left_frame = Frame(root, borderwidth=4, relief='groove')
         self.left_frame.pack(side=LEFT)
         self.right_frame = Frame(root, borderwidth=4, relief='groove')
@@ -77,18 +84,15 @@ class App(object):
         self.button_row4 = Frame(self.right_frame)
         self.button_row4.pack(side=TOP)
 
-        self.button1 = Button(self.button_row1, text='Up', width=9, height=2).pack()
-        self.button2 = Button(self.button_row2, text='Left', width=9, height=2).pack(side=LEFT)
-        self.button3 = Button(self.button_row2, text='Right', width=9, height=2).pack(side=LEFT)
-        self.button4 = Button(self.button_row3, text='Down', width=9, height=2).pack()
-        self.button5 = Button(self.button_row4, text='Reset', width=9, height=2, bg='yellow').pack()
+        self.button1 = Button(self.button_row1, text='Up', width=9, height=2, command=self.respond('Up')).pack()
+        self.button2 = Button(self.button_row2, text='Left', width=9, height=2, command=self.respond('Left')).pack(
+            side=LEFT)
+        self.button3 = Button(self.button_row2, text='Right', width=9, height=2, command=self.respond('Right')).pack(
+            side=LEFT)
+        self.button4 = Button(self.button_row3, text='Down', width=9, height=2, command=self.respond('Down')).pack()
+        self.button5 = Button(self.button_row4, text='Reset', width=9, height=2, command=self.respond('Reset'),
+                              bg='yellow').pack()
 
-        self.height = 4
-        self.width = 4
-        self.win_value = 2048
-        self.score = 0
-        self.high_score = 0
-        self.field = [[0 for i in range(self.width)] for j in range(self.height)]
         self.reset()
 
     def spawn(self):
@@ -128,6 +132,7 @@ class App(object):
             return False
 
     def respond(self, action):
+        print(action)
         if action == 'Restart':
             self.reset()
         else:
@@ -184,37 +189,37 @@ class App(object):
         game_over_string = '         GAME OVER'
         win_string = '          YOU WIN!'
 
-        self.value11.delete(0)
+        self.value11.delete("1.0", END)
         self.value11.insert(END, self.field[0][0])
-        self.value12.delete(0)
+        self.value12.delete("1.0", END)
         self.value12.insert(END, self.field[0][1])
-        self.value13.delete(0)
+        self.value13.delete("1.0", END)
         self.value13.insert(END, self.field[0][2])
-        self.value14.delete(0)
+        self.value14.delete("1.0", END)
         self.value14.insert(END, self.field[0][3])
-        self.value21.delete(0)
+        self.value21.delete("1.0", END)
         self.value21.insert(END, self.field[1][0])
-        self.value22.delete(0)
+        self.value22.delete("1.0", END)
         self.value22.insert(END, self.field[1][1])
-        self.value23.delete(0)
+        self.value23.delete("1.0", END)
         self.value23.insert(END, self.field[1][2])
-        self.value24.delete(0)
+        self.value24.delete("1.0", END)
         self.value24.insert(END, self.field[1][3])
-        self.value31.delete(0)
+        self.value31.delete("1.0", END)
         self.value31.insert(END, self.field[2][0])
-        self.value32.delete(0)
+        self.value32.delete("1.0", END)
         self.value32.insert(END, self.field[2][1])
-        self.value33.delete(0)
+        self.value33.delete("1.0", END)
         self.value33.insert(END, self.field[2][2])
-        self.value34.delete(0)
+        self.value34.delete("1.0", END)
         self.value34.insert(END, self.field[2][3])
-        self.value41.delete(0)
+        self.value41.delete("1.0", END)
         self.value41.insert(END, self.field[3][0])
-        self.value42.delete(0)
+        self.value42.delete("1.0", END)
         self.value42.insert(END, self.field[3][1])
-        self.value43.delete(0)
+        self.value43.delete("1.0", END)
         self.value43.insert(END, self.field[3][2])
-        self.value44.delete(0)
+        self.value44.delete("1.0", END)
         self.value44.insert(END, self.field[3][3])
 
         if self.is_win():

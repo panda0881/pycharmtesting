@@ -8,8 +8,9 @@ class App(object):
         self.button = Button(root, text='Left', width=9, height=2, command=self.go).pack(side=LEFT)
 
     def go(self):
+        print('go')
         self.text.delete("1.0", END)
-        self.text.insert(END, "do")
+        self.text.insert(END, 1)
 
 
 if __name__ == '__main__':
