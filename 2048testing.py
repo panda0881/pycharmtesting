@@ -2,8 +2,6 @@ from tkinter import *
 
 from random import randrange, choice
 
-from collections import defaultdict
-
 actions = ['Up', 'Left', 'Down', 'Right', 'Restart', 'Exit']
 
 
@@ -84,16 +82,17 @@ class App(object):
         self.button_row4 = Frame(self.right_frame)
         self.button_row4.pack(side=TOP)
 
-        self.button1 = Button(self.button_row1, text='Up', width=9, height=2, command=self.respond('Up')).pack()
-        self.button2 = Button(self.button_row2, text='Left', width=9, height=2, command=self.respond('Left')).pack(
-            side=LEFT)
-        self.button3 = Button(self.button_row2, text='Right', width=9, height=2, command=self.respond('Right')).pack(
-            side=LEFT)
-        self.button4 = Button(self.button_row3, text='Down', width=9, height=2, command=self.respond('Down')).pack()
-        self.button5 = Button(self.button_row4, text='Reset', width=9, height=2, command=self.respond('Reset'),
-                              bg='yellow').pack()
-
         self.reset()
+
+        Button(self.button_row1, text='Up', width=9, height=2, command=lambda: self.respond('Up')).pack()
+        Button(self.button_row2, text='Left', width=9, height=2, command=lambda: self.respond('Left')).pack(side=LEFT)
+        Button(self.button_row2, text='Right', width=9, height=2, command=lambda: self.respond('Right')).pack(side=LEFT)
+        Button(self.button_row3, text='Down', width=9, height=2, command=lambda: self.respond('Down')).pack()
+        Button(self.button_row4, text='Reset', width=9, height=2, command=lambda: self.respond('Restart'),
+               bg='yellow').pack(side=LEFT)
+        Button(self.button_row4, text='Quit', width=9, height=2, command=root.quit, bg='red').pack(side=LEFT)
+
+        print('finish initializing')
 
     def spawn(self):
         new_element = 2
@@ -101,6 +100,7 @@ class App(object):
             new_element = 4
         (i, j) = choice([(i, j) for i in range(self.width) for j in range(self.height) if self.field[i][j] == 0])
         self.field[i][j] = new_element
+        self.draw()
 
     def reset(self):
         if self.score > self.high_score:
@@ -110,7 +110,9 @@ class App(object):
         self.spawn()
 
     def move_is_possible(self, direction):
+
         def row_is_left_movable(row):
+
             def change(i):
                 if row[i] == 0 and row[i + 1] != 0:
                     return True
@@ -119,7 +121,6 @@ class App(object):
                 return False
 
             return any(change(i) for i in range(len(row) - 1))
-
         check = {}
         check['Left'] = lambda field: any(row_is_left_movable(row) for row in field)
         check['Right'] = lambda field: any(row_is_left_movable(row) for row in field)
@@ -132,7 +133,7 @@ class App(object):
             return False
 
     def respond(self, action):
-        print(action)
+        print("activating" + action)
         if action == 'Restart':
             self.reset()
         else:
@@ -229,7 +230,7 @@ class App(object):
 
 
 if __name__ == '__main__':
-    root = Tk()
-    root.geometry('400x300')
-    app = App(root)
-    root.mainloop()
+    base = Tk()
+    base.geometry('400x300')
+    app = App(base)
+    base.mainloop()
