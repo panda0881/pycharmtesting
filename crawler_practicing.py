@@ -9,10 +9,11 @@ def save_file(content):
 
 
 url = "http://www.douban.com"
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) ''Chrome/51.0.2704.63 Safari/537.36'}
+request = urllib.request.Request(url=url, headers=headers)
 
-request = urllib.request.Request(url)
-
-response = urllib.request.urlopen(request)
+response = urllib.request.urlopen(request, timeout=2)
 
 data = response.read()
 
