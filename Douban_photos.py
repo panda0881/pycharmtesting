@@ -1,6 +1,9 @@
-import urllib.request, re, os
+import urllib.request
+import re
+import os
 
 target_path = "C:\\Users\\user\\PycharmProjects\\otherFiles"
+
 
 def save_file(path):
     if not os.path.isdir(target_path):
