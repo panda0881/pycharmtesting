@@ -13,11 +13,12 @@ except NeedCaptchaException:
     captcha = input('please input captcha:')
     client.login('hzhangal0330@gmail.com', 'zhm940330', captcha)
 
-me = client.from_url('https://www.zhihu.com/people/SONG-OF-SIREN')
+me = client.from_url('https://www.zhihu.com/people/seabert')
 
 print('name', me.name)
 print('headline', me.headline)
 print('description', me.description)
+print('location', me.locations)
 
 print('following topic count', me.following_topic_count)
 print('following people count', me.following_topic_count)
@@ -32,11 +33,14 @@ print('collection count', me.collection_count)
 print('article count', me.articles_count)
 print('following column count', me.following_column_count)
 
-print('testing')
+
 print(me.followers)
 
 for _, answer in zip(range(5), me.answers.order_by('votenum')):
     print(answer.question.title, answer.voteup_count)
+
+for topic in me.following_topics:
+    print(topic.name)
 
 # for _, follower in zip(range(20), me.followers):
 #     print(follower.name, follower.voteup_count)
