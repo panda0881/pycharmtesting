@@ -1,4 +1,5 @@
 from textblob import TextBlob
+import pandas as pd
 
 testwords = ['good is bad, bad is good good', 'hello', 'fucking', 'best', 'beautiful', 'bad', 'wonderful', 'horrible',
              'haha', 'ok', 'accaptable', 'jnfjanfjanfja']
@@ -148,6 +149,7 @@ them first hand, they always have a slight twist which makes them even better.
 """
 
 blob = TextBlob(testparagraph)
+# blob = blob.correct()
 words = list(blob.tags)
 word_type_list = ['JJ', 'NN', 'NR', 'NT', 'PN', 'AD']
 words2 = list()
@@ -174,9 +176,18 @@ for i in range(0, len(words2)):
                 pair_list.append((words2[j], words2[last_noun_position]))
         last_PN_position = i
 
-# for sentences in blob.sentences:
-#     print(sentences)
-#     print(sentences.sentiment.polarity)
-print(pair_list)
-
+result = dict()
+for pair in pair_list:
+    if pair[1][0] not in result:
+        result[pair[1][0]] = TextBlob(pair[0][0]).sentiment.polarity
+    else:
+        result[pair[1][0]] += TextBlob(pair[0][0]).sentiment.polarity
+result = pd.Series(result)
+result.sort_values(ascending=False, inplace=True)
+positive_reason = result[:5]
+negative_reason = result[-5:].sort_values()
+print('Top five positive reasons: ')
+print(positive_reason)
+print('Top five negative reasons: ')
+print(negative_reason)
 print('end')
