@@ -18,7 +18,7 @@ for tmp_record in tqdm(all_record):
         tmp_friends = tmp_record['friends'].split(', ')
         for friend_id in tmp_friends:
             if friend_id in selected_user_ids:
-                selected_edges.append((tmp_record['user_id']))
+                selected_edges.append((tmp_record['user_id'], friend_id))
 
 print('extracted edges:', len(selected_edges))
 
