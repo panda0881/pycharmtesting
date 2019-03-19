@@ -2,6 +2,8 @@ import pandas
 import ujson as json
 from tqdm import tqdm
 
+
+
 all_record = list()
 with open('/home/data/corpora/YELP/yelp_dataset_challenge_round13/user.json', 'r') as f:
     for line in f:
@@ -9,7 +11,7 @@ with open('/home/data/corpora/YELP/yelp_dataset_challenge_round13/user.json', 'r
 
 with open('selected_user_ids.json', 'r') as f:
     selected_user_ids = json.load(f)
-selected_user_ids = set(selected_user_ids)
+selected_user_ids = set(selected_user_ids[:20000])
 
 selected_edges = list()
 
