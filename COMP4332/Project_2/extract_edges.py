@@ -1,8 +1,7 @@
 import pandas
 import ujson as json
 from tqdm import tqdm
-
-
+import random
 
 all_record = list()
 with open('/home/data/corpora/YELP/yelp_dataset_challenge_round13/user.json', 'r') as f:
@@ -11,7 +10,8 @@ with open('/home/data/corpora/YELP/yelp_dataset_challenge_round13/user.json', 'r
 
 with open('selected_user_ids.json', 'r') as f:
     selected_user_ids = json.load(f)
-selected_user_ids = set(selected_user_ids[:20000])
+random.shuffle(selected_user_ids)
+selected_user_ids = set(selected_user_ids[:5000])
 
 selected_edges = list()
 
